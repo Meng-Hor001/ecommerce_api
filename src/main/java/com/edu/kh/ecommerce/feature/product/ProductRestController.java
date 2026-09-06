@@ -2,6 +2,7 @@ package com.edu.kh.ecommerce.feature.product;
 
 import com.edu.kh.ecommerce.feature.product.dto.CreateProductRequest;
 import com.edu.kh.ecommerce.feature.product.dto.ProductResponse;
+import com.edu.kh.ecommerce.feature.product.dto.UpdateProductRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,5 +32,14 @@ public class ProductRestController {
             @RequestParam (required = false, defaultValue = "25") int pageSize
     ){
         return productService.getProducts(pageSize, pageNumber);
+    }
+
+
+    @PutMapping("/{code}")
+    public ProductResponse updateByCode(
+            @PathVariable String code,
+            @Valid @RequestBody UpdateProductRequest updateProductRequest
+            ){
+        return productService.updateProductByCode(code,updateProductRequest);
     }
 }

@@ -4,6 +4,7 @@ import com.edu.kh.ecommerce.feature.category.Category;
 import com.edu.kh.ecommerce.feature.category.CategoryRepository;
 import com.edu.kh.ecommerce.feature.product.dto.CreateProductRequest;
 import com.edu.kh.ecommerce.feature.product.dto.ProductResponse;
+import com.edu.kh.ecommerce.feature.product.dto.UpdateProductRequest;
 import com.edu.kh.ecommerce.util.GenerateUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -58,5 +59,29 @@ public class ProductServiceImpl implements ProductService{
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         return productRepository.findAll(pageable)
                 .map(productMapper::productToProductResponse);
+    }
+
+    @Override
+    public ProductResponse updateProductByCode(String code,UpdateProductRequest updateProductRequest) {
+
+        // TODO :
+        // Validate Product Code
+        Product product = productRepository.findById(code)
+                .orElseThrow(()-> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Product code not found"
+                ));
+
+
+        productMapper.updateProductRequestToProduct(updateProductRequest, product);
+
+        product = productRepository.save(product);
+        return productMapper.productToProductResponse(product);
+    }
+
+    @Override
+    public ProductResponse getProductByCode(String code) {
+
+        return null;
     }
 }
