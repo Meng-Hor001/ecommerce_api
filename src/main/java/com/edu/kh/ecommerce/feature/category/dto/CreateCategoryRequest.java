@@ -1,4 +1,7 @@
 package com.edu.kh.ecommerce.feature.category.dto;
 
-public class CreateCategoryRequest {
+import lombok.Builder;
+
+@Builder
+public record CreateCategoryRequest() {
 }

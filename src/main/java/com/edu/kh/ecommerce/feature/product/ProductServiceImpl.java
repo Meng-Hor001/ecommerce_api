@@ -4,7 +4,11 @@ import com.edu.kh.ecommerce.feature.category.Category;
 import com.edu.kh.ecommerce.feature.category.CategoryRepository;
 import com.edu.kh.ecommerce.feature.product.dto.CreateProductRequest;
 import com.edu.kh.ecommerce.feature.product.dto.ProductResponse;
+import com.edu.kh.ecommerce.util.GenerateUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -15,6 +19,7 @@ public class ProductServiceImpl implements ProductService{
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final ProductMapper productMapper;
 
 
     @Override
@@ -36,9 +41,22 @@ public class ProductServiceImpl implements ProductService{
         product.setCategory(category);
 
         // 3. System data
-        product.setCode("ISTAD-PRO-001");
+        product.setCode(GenerateUtil.RandomProductCode());
         product.setIsAvailable(true);
 
-        return null;
+
+        // 4. Save into database
+        product = productRepository.save(product);
+
+        // 5. Transfer data from Entity to DTO
+        return productMapper.productToProductResponse(product);
+    }
+
+    @Override
+    public Page<ProductResponse> getProducts(int pageSize, int pageNumber) {
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        return productRepository.findAll(pageable)
+                .map(productMapper::productToProductResponse);
     }
 }

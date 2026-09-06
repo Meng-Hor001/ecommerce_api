@@ -1,9 +1,12 @@
 package com.edu.kh.ecommerce.feature.product.dto;
 
+import lombok.Builder;
+
 import java.math.BigDecimal;
 
+@Builder
 public record ProductResponse(
-        Integer code,
+        String code,
         String name,
         BigDecimal price,
         Integer qty,
